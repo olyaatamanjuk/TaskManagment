@@ -1,0 +1,38 @@
+﻿@page "/counter"
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+    private int currentRowsCount = 0;
+    [Inject]
+    private DataContext Context { get; set; } 
+    
+    
+
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    
+        private async Task AddTaskCard()
+        {
+            var taskCard = new TaskCard() { Name = "wow" };
+            Context.TaskCards.Add(taskCard);
+            await Context.SaveChangesAsync();
+
+            currentRowsCount = Context.TaskCards.Count();
+        }
+}
+
+<p role="status">Current rows in table: @currentRowsCount</p>
+<button class="btn btn-primary" @onclick="AddTaskCard"> Test db</button>
