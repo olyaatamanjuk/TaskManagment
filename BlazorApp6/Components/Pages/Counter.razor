@@ -1,4 +1,5 @@
 ﻿@page "/counter"
+@using BlazorApp6.Services
 @using BlazorApp6.UnitOfWork
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
@@ -21,13 +22,20 @@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+@inject TaskCardService taskCardService
+@inject CategoryService categoryService
+@inject IUnitOfWork unitOfWork
 
 @code {
   
     private int currentCount = 0;
     private int currentRowsCount = 0;
 
-    [Inject] IUnitOfWork unitOfWork { get; set; }
+    
+    
+
+   // private TaskCardService taskCardService { get; set; } = new TaskCardService(unitOfWork);
+   // private CategoryService categoryService { get; set; } = new CategoryService(unitOfWork);
 
     private void IncrementCount()
     {
@@ -38,13 +46,10 @@
         {
             //Category testCategory = new Category() { Name = "moovies" };
 
-            Category testCategory = unitOfWork.Categories.GetAllAsync().Result.First();
-            //await unitOfWork.Categories.AddAsync(testCategory);
-            
-           // await unitOfWork.SaveChangesAsync();
+            Category testCategory = categoryService.GetAllAsync().Result.First();
             
             var taskCard = new TaskCard() { Name = "wow" , Category = testCategory, Status = "New"};
-            await unitOfWork.TaskCards.AddAsync(taskCard);
+            await taskCardService.AddAsync(taskCard);
             
             await unitOfWork.SaveChangesAsync();
             TaskCardsCount();
@@ -52,7 +57,7 @@
 
         private void TaskCardsCount()
         {
-             currentRowsCount  = unitOfWork.TaskCards.GetAllAsync().Result.Count();
+             currentRowsCount  = taskCardService.GetAllAsync().Result.Count();
         }
 }
 

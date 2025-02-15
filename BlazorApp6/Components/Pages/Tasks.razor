@@ -4,8 +4,14 @@
 @using Microsoft.EntityFrameworkCore;
 @using System.Linq;
 @using BlazorApp6.Repository
+@using BlazorApp6.Services
 
 @page "/tasks"
+
+@inject TaskCardService taskCardService
+@inject CategoryService categoryService
+@inject IUnitOfWork unitOfWork
+
 <h3>Tasks</h3>
 
 
@@ -36,7 +42,7 @@ else
                 <td>@taskCard.CreatedAt.ToShortDateString()</td>
                 <td>@taskCard.Name</td>
                 <td>@taskCard.Status</td>
-                <td>@taskCard.Category</td>
+                <td>@taskCard.Category.Name</td>
                 <td>@taskCard.Members</td>
             </tr>
         }
@@ -45,8 +51,6 @@ else
 }
 
 @code {
-    [Inject]
-    IUnitOfWork unitOfWork{ get; set; }
 
     private List<TaskCard> taskCardsList;
     
@@ -80,7 +84,7 @@ else
     
     private void TaskCardsReader()
     { 
-        taskCardsList  = unitOfWork.TaskCards.GetAllAsync().Result.ToList(); 
+        taskCardsList  = taskCardService.GetAllAsync().Result.ToList(); 
 
        //taskCardsList = taskRepository.GetAllAsync().Result.ToList();
     }

@@ -5,11 +5,12 @@ using Microsoft.EntityFrameworkCore;
 namespace BlazorApp6.UnitOfWork;
 
 
-    public interface IUnitOfWork : IDisposable
-    {
-        IService<Member> Members { get; }
-        IService<Category> Categories { get; }
-        IService<Property> Properties { get; }
-        IService<TaskCard> TaskCards { get; }
-        Task<int> SaveChangesAsync();
-    }
+public interface IUnitOfWork : IDisposable
+{
+    ITaskCardRepository TaskCards { get; }
+
+    IRepository<T> Repository<T>() where T : class;
+
+    Task<int> SaveChangesAsync();
+}
+

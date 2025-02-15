@@ -2,11 +2,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp6.Repository;
 
-public class TaskRepository : Repository<TaskCard>, ITaskRepository
+public class TaskCardRepository : Repository<TaskCard>, ITaskCardRepository
 {
-    public TaskRepository(DataContext context) : base(context)
+    
+    public TaskCardRepository(DataContext context) : base(context)
+    
     {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
+    
 
     public override async Task<IEnumerable<TaskCard>> GetAllAsync()
     {

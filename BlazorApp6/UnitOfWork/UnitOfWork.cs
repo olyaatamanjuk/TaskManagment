@@ -7,31 +7,17 @@ namespace BlazorApp6.UnitOfWork;
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DataContext _context;
+    
+        public ITaskCardRepository  TaskCards { get; }
+
+        // Загальний репозиторій для всіх інших моделей
+        public IRepository<T> Repository<T>() where T : class => new Repository<T>(_context);
         
-        public IService<Member> Members { get; }
-        public IService<Category> Categories { get; }
-        public IService<Property> Properties { get; }
-        public IService<TaskCard> TaskCards { get; }
-
-        public UnitOfWork(
-            DataContext context, 
-            IService<TaskCard> taskCardService, 
-            IService<Category> categoryService,
-            IService<Member> memberService,
-            IService<Property> propertyService)
+        public UnitOfWork(DataContext context, ITaskCardRepository taskCardRepository)
         {
-            _context = context;
-            //Members = new BasicService<Member>(new Repository<Member>(_context));
-            //Categories = new BasicService<Category>(new Repository<Category>(_context));
-            //Properties = new BasicService<Property>(new Repository<Property>(_context));
-            //TaskCards = new BasicService<TaskCard>(new Repository<TaskCard>(_context)); 
-            //TaskCards = new BasicService<TaskCard>(new TaskRepository(_context));
-            Categories = categoryService;
-            TaskCards = taskCardService;
-            Members = memberService;
-            Properties = propertyService;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            TaskCards = taskCardRepository ?? throw new ArgumentNullException(nameof(taskCardRepository));
         }
-
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();

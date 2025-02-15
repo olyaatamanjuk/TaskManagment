@@ -16,17 +16,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 // Додати репозиторії
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-//builder.Services.AddScoped(typeof(ITaskRepository), typeof(TaskRepository));
-//builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-
-// Додати узагальнені сервіси
-builder.Services.AddScoped(typeof(IService<>), typeof(BasicService<>));
-
-// Додати специфічний сервіс для Task
-//builder.Services.AddScoped<ITaskService, TaskService>();
-
-// Додати UnitOfWork
+builder.Services.AddScoped<ITaskCardRepository, TaskCardRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<TaskCardService>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<MemberService>();
+builder.Services.AddScoped<PropertyService>();
 
 var app = builder.Build();
 
