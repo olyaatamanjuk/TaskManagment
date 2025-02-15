@@ -16,6 +16,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 // Додати репозиторії
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+//builder.Services.AddScoped(typeof(ITaskRepository), typeof(TaskRepository));
+//builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 // Додати узагальнені сервіси
 builder.Services.AddScoped(typeof(IService<>), typeof(BasicService<>));

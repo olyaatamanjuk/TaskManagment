@@ -13,13 +13,23 @@ namespace BlazorApp6.UnitOfWork;
         public IService<Property> Properties { get; }
         public IService<TaskCard> TaskCards { get; }
 
-        public UnitOfWork(DataContext context)
+        public UnitOfWork(
+            DataContext context, 
+            IService<TaskCard> taskCardService, 
+            IService<Category> categoryService,
+            IService<Member> memberService,
+            IService<Property> propertyService)
         {
             _context = context;
-            Members = new BasicService<Member>(new Repository<Member>(_context));
-            Categories = new BasicService<Category>(new Repository<Category>(_context));
-            Properties = new BasicService<Property>(new Repository<Property>(_context));
-            TaskCards = new BasicService<TaskCard>(new Repository<TaskCard>(_context)); 
+            //Members = new BasicService<Member>(new Repository<Member>(_context));
+            //Categories = new BasicService<Category>(new Repository<Category>(_context));
+            //Properties = new BasicService<Property>(new Repository<Property>(_context));
+            //TaskCards = new BasicService<TaskCard>(new Repository<TaskCard>(_context)); 
+            //TaskCards = new BasicService<TaskCard>(new TaskRepository(_context));
+            Categories = categoryService;
+            TaskCards = taskCardService;
+            Members = memberService;
+            Properties = propertyService;
         }
 
         public async Task<int> SaveChangesAsync()

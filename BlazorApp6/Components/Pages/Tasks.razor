@@ -1,0 +1,88 @@
+@using BlazorApp6.UnitOfWork
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore;
+@using System.Linq;
+@using BlazorApp6.Repository
+
+@page "/tasks"
+<h3>Tasks</h3>
+
+
+<p>There is our ToDo/Wish List :) </p>
+
+@if (forecasts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Category</th>
+            <th>Members</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var taskCard in taskCardsList)
+        {
+            <tr>
+                <td>@taskCard.CreatedAt.ToShortDateString()</td>
+                <td>@taskCard.Name</td>
+                <td>@taskCard.Status</td>
+                <td>@taskCard.Category</td>
+                <td>@taskCard.Members</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Inject]
+    IUnitOfWork unitOfWork{ get; set; }
+
+    private List<TaskCard> taskCardsList;
+    
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TaskCardsReader();
+        
+        
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = startDate.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        }).ToArray();
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+    
+    private void TaskCardsReader()
+    { 
+        taskCardsList  = unitOfWork.TaskCards.GetAllAsync().Result.ToList(); 
+
+       //taskCardsList = taskRepository.GetAllAsync().Result.ToList();
+    }
+
+}

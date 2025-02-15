@@ -26,13 +26,8 @@
   
     private int currentCount = 0;
     private int currentRowsCount = 0;
-    [Inject]
-    private DataContext Context { get; set; }
 
-    [Inject]
-    IUnitOfWork unitOfWork{ get; set; }
-
-
+    [Inject] IUnitOfWork unitOfWork { get; set; }
 
     private void IncrementCount()
     {
@@ -41,9 +36,16 @@
     
         private async Task AddTaskCard()
         {
-            Category testCategory = new Category() { Name = "moovies" };
+            //Category testCategory = new Category() { Name = "moovies" };
+
+            Category testCategory = unitOfWork.Categories.GetAllAsync().Result.First();
+            //await unitOfWork.Categories.AddAsync(testCategory);
+            
+           // await unitOfWork.SaveChangesAsync();
+            
             var taskCard = new TaskCard() { Name = "wow" , Category = testCategory, Status = "New"};
             await unitOfWork.TaskCards.AddAsync(taskCard);
+            
             await unitOfWork.SaveChangesAsync();
             TaskCardsCount();
         }

@@ -20,19 +20,19 @@ namespace BlazorApp6.Migrations
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
             modelBuilder.Entity("BlazorApp6.TaskCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("TaskCards");
-                });
+                b.ToTable("TaskCards");
+            });
 #pragma warning restore 612, 618
         }
     }
