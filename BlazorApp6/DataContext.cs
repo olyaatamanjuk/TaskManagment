@@ -8,4 +8,7 @@ public class DataContext: DbContext
       
    }
    public DbSet<TaskCard> TaskCards  => Set<TaskCard>();
+   public DbSet<Member> Members { get; set; }
+   public DbSet<Category> Categories { get; set; }
+   public DbSet<Property> Properties { get; set; }
 }

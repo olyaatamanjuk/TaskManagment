@@ -1,6 +1,18 @@
 ﻿@page "/counter"
+@using BlazorApp6.UnitOfWork
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
+
+@code {
+
+    protected override void OnInitialized() // = On Page Load
+    {
+        TaskCardsCount();
+        //private UnitOfWork unitOfWork { get; set; } 
+       
+    }  
+
+}
 
 <PageTitle>Counter</PageTitle>
 
@@ -11,12 +23,15 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+  
     private int currentCount = 0;
     private int currentRowsCount = 0;
     [Inject]
-    private DataContext Context { get; set; } 
-    
-    
+    private DataContext Context { get; set; }
+
+    [Inject]
+    IUnitOfWork unitOfWork{ get; set; }
+
 
 
     private void IncrementCount()
@@ -26,11 +41,16 @@
     
         private async Task AddTaskCard()
         {
-            var taskCard = new TaskCard() { Name = "wow" };
-            Context.TaskCards.Add(taskCard);
-            await Context.SaveChangesAsync();
+            Category testCategory = new Category() { Name = "moovies" };
+            var taskCard = new TaskCard() { Name = "wow" , Category = testCategory, Status = "New"};
+            await unitOfWork.TaskCards.AddAsync(taskCard);
+            await unitOfWork.SaveChangesAsync();
+            TaskCardsCount();
+        }
 
-            currentRowsCount = Context.TaskCards.Count();
+        private void TaskCardsCount()
+        {
+             currentRowsCount  = unitOfWork.TaskCards.GetAllAsync().Result.Count();
         }
 }
 

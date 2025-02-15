@@ -1,5 +1,8 @@
 using BlazorApp6;
 using BlazorApp6.Components;
+using BlazorApp6.Repository;
+using BlazorApp6.Services;
+using BlazorApp6.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,8 +10,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
 builder.Services.AddDbContext<DataContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Додати репозиторії
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+// Додати узагальнені сервіси
+builder.Services.AddScoped(typeof(IService<>), typeof(BasicService<>));
+
+// Додати специфічний сервіс для Task
+//builder.Services.AddScoped<ITaskService, TaskService>();
+
+// Додати UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
